@@ -2,7 +2,13 @@
     {
         "title": "Chromium",
         "icon": "web-browser",
-        "command": "chromium"
+        "command": [
+            "chromium",
+            "--ozone-platform=wayland",
+            "--enable-features=UseOzonePlatform",
+            "--kiosk",
+            "https://www.google.com"
+        ]
     },
     {
         "title": "Kodi",
