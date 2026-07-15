@@ -6,8 +6,7 @@
             "chromium",
             "--ozone-platform=wayland",
             "--enable-features=UseOzonePlatform",
-            "--kiosk",
-            "https://www.google.com"
+            "--app=https://www.google.com"
         ]
     },
     {

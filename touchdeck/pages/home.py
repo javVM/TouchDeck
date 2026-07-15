@@ -27,31 +27,35 @@ class HomePage(Gtk.Box):
         self._build_ui()
 
     def _build_ui(self) -> None:
-        """Build the page UI."""
+        """Build page layout."""
 
         self.set_margin_top(20)
         self.set_margin_bottom(20)
         self.set_margin_start(20)
         self.set_margin_end(20)
 
-        self._grid = Gtk.Grid(
+        self._apps_box = Gtk.FlowBox(
+            homogeneous=True,
             row_spacing=20,
             column_spacing=20,
+            selection_mode=Gtk.SelectionMode.NONE,
         )
 
-        self._populate_grid()
+        self._apps_box.set_valign(
+            Gtk.Align.START
+        )
 
-        self.append(self._grid)
+        self._populate_apps()
 
-    def _populate_grid(self) -> None:
-        """Populate the launcher grid."""
+        self.append(self._apps_box)
+
+    def _populate_apps(self) -> None:
+        """Load applications and create tiles."""
 
         apps = self._config.load_apps()
 
-        row = 0
-        col = 0
-
         for app in apps:
+
             tile = AppTile(app)
 
             tile.connect(
@@ -59,25 +63,16 @@ class HomePage(Gtk.Box):
                 self._on_app_activated,
             )
 
-            self._grid.attach(
+            self._apps_box.insert(
                 tile,
-                col,
-                row,
-                1,
-                1,
+                -1,
             )
-
-            col += 1
-
-            if col == 2:
-                col = 0
-                row += 1
 
     def _on_app_activated(
         self,
         _: AppTile,
         app: AppEntry,
     ) -> None:
-        """Launch the selected application."""
+        """Launch selected application."""
 
         self._launcher.launch(app)

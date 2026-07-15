@@ -10,7 +10,7 @@ from touchdeck.models.app_entry import AppEntry
 
 
 class AppTile(Gtk.Button):
-    """A touch-friendly tile representing a launchable application."""
+    """Touch-friendly application tile."""
 
     __gsignals__ = {
         "activated": (
@@ -20,47 +20,69 @@ class AppTile(Gtk.Button):
         ),
     }
 
-    def __init__(self, app: AppEntry) -> None:
+    def __init__(
+        self,
+        app: AppEntry,
+    ) -> None:
+
         super().__init__()
 
         self._app = app
 
-        self.set_size_request(140, 140)
+        self.set_size_request(
+            140,
+            140,
+        )
+
+        self.add_css_class(
+            "app-tile"
+        )
 
         self._build_ui()
         self._connect_signals()
 
     def _build_ui(self) -> None:
-        """Build the widget hierarchy."""
 
-        self._box = Gtk.Box(
+        box = Gtk.Box(
             orientation=Gtk.Orientation.VERTICAL,
             spacing=12,
             halign=Gtk.Align.CENTER,
             valign=Gtk.Align.CENTER,
         )
 
-        self._image = Gtk.Image(
+        image = Gtk.Image(
             icon_name=self._app.icon,
-            pixel_size=48,
+            pixel_size=64,
         )
 
-        self._label = Gtk.Label(
+        image.add_css_class(
+            "app-icon"
+        )
+
+        label = Gtk.Label(
             label=self._app.title,
         )
 
-        self._box.append(self._image)
-        self._box.append(self._label)
+        label.add_css_class(
+            "app-title"
+        )
 
-        self.set_child(self._box)
+        box.append(image)
+        box.append(label)
+
+        self.set_child(box)
 
     def _connect_signals(self) -> None:
-        """Connect GTK signals."""
 
-        self.connect("clicked", self._on_clicked)
+        self.connect(
+            "clicked",
+            self._on_clicked,
+        )
 
-    def _on_clicked(self, _: Gtk.Button) -> None:
-        """Emit the activation signal."""
+    def _on_clicked(
+        self,
+        _: Gtk.Button,
+    ) -> None:
 
         self.emit(
             "activated",
