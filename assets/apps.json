@@ -13,16 +13,16 @@
     {
         "title": "Kodi",
         "icon": "kodi",
-        "command": "kodi"
+        "command": ["kodi"]
     },
     {
         "title": "Files",
         "icon": "system-file-manager",
-        "command": "pcmanfm"
+        "command": ["pcmanfm"]
     },
     {
         "title": "Terminal",
         "icon": "utilities-terminal",
-        "command": "lxterminal"
+        "command": ["lxterminal"]
     }
 ]

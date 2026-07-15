@@ -9,7 +9,7 @@ class AppEntry:
 
     title: str
     icon: str
-    command: str
+    command: list[str]
 
     @classmethod
     def from_dict(cls, data: dict[str, str]) -> "AppEntry":

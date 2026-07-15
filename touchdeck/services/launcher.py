@@ -10,6 +10,6 @@ class LauncherService:
 
     def launch(self, app: AppEntry) -> None:
         subprocess.Popen(
-            [app.command],
+            app.command,
             start_new_session=True,
         )
