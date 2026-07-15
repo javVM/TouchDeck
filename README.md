@@ -1,56 +1,52 @@
 # TouchDeck
 
-**A modular touch-first shell for Raspberry Pi and Linux, built with GTK4 and Wayland.**
+> A modern touch-first shell for Raspberry Pi and Linux.
 
-TouchDeck is an open-source project that aims to transform Raspberry Pi and other Linux devices into modern touch-first systems.
+TouchDeck is an open-source project that transforms Raspberry Pi and Linux devices into a modern touch interface designed specifically for touchscreens.
 
-Instead of adapting a traditional desktop environment, TouchDeck provides a clean, intuitive interface designed specifically for touchscreens. Whether you're building a home automation panel, a media center, a wall-mounted dashboard, or a dedicated kiosk, TouchDeck provides a lightweight and extensible foundation.
+Instead of adapting a traditional desktop environment, TouchDeck provides a lightweight, modular and extensible shell capable of launching applications, displaying dashboards and integrating with external services such as Home Assistant.
 
 ---
 
 # Vision
 
-Traditional Linux desktop environments are designed around a mouse and keyboard.
+Traditional desktop environments were designed around a mouse and keyboard.
 
 TouchDeck starts from a different premise:
 
-> **Build a desktop designed for fingers, not cursors.**
+> **Design for fingers, not cursors.**
 
-The project focuses on simplicity, responsiveness and modularity while taking advantage of modern Linux technologies such as Wayland and GTK4.
-
-TouchDeck is not just an application launcher.
-
-It is intended to become a complete touch-first shell capable of hosting media applications, smart home dashboards, system controls and future plugins.
+The goal is to create a responsive, beautiful and modular interface that feels natural on touch devices while remaining lightweight enough to run on Raspberry Pi hardware.
 
 ---
 
 # Goals
 
-* Build a modern touch-first desktop experience.
-* Replace traditional desktop paradigms with a simplified UI.
-* Keep the project lightweight and responsive.
-* Maintain a clean and scalable architecture.
-* Be fully configurable.
-* Support Raspberry Pi as a first-class platform.
-* Remain modular and extensible.
-* Follow modern Python development practices.
+* Touch-first interface
+* Modern GTK4 UI
+* Wayland native
+* Lightweight
+* Modular architecture
+* Easy to extend
+* Raspberry Pi first
+* Open source
 
 ---
 
 # Planned Features
 
-* Touch-first launcher
-* Fullscreen shell
+* Application launcher
 * Home Assistant integration
 * Kodi integration
 * Media dashboard
-* System settings
+* Camera dashboard
+* Widgets
 * Notifications
-* Weather widgets
+* Weather
 * Calendar
-* Camera monitoring
-* Network management
-* Brightness & volume controls
+* System settings
+* Brightness control
+* Volume control
 * Power management
 * Plugin system
 
@@ -61,17 +57,19 @@ It is intended to become a complete touch-first shell capable of hosting media a
 | Component      | Technology     |
 | -------------- | -------------- |
 | Language       | Python 3       |
-| UI Toolkit     | GTK4           |
-| Design Library | Libadwaita     |
+| GUI            | GTK4           |
+| Design         | Libadwaita     |
 | Display Server | Wayland        |
 | Compositor     | Labwc          |
-| Styling        | CSS            |
 | Configuration  | JSON           |
+| Styling        | CSS            |
 | Packaging      | pyproject.toml |
 
 ---
 
-# High-Level Architecture
+# Architecture
+
+TouchDeck follows a layered architecture.
 
 ```text
 TouchDeckApplication
@@ -80,26 +78,23 @@ TouchDeckApplication
     MainWindow
         │
         ▼
-    Navigation
+      Pages
         │
         ▼
-       Pages
+     Widgets
         │
         ▼
-      Widgets
+     Services
         │
         ▼
-      Services
-        │
-        ▼
-       Models
+      Models
 ```
 
 Each layer has a single responsibility.
 
-The UI should never communicate directly with the operating system.
+Widgets never execute system commands directly.
 
-Instead, widgets emit events and services execute the corresponding system actions.
+Services encapsulate interactions with the operating system.
 
 ---
 
@@ -108,154 +103,94 @@ Instead, widgets emit events and services execute the corresponding system actio
 ```text
 touchdeck/
 │
-├── touchdeck/
-│   │
-│   ├── core/
-│   │   ├── application.py
-│   │   ├── window.py
-│   │   ├── navigation.py
-│   │   └── config.py
-│   │
-│   ├── models/
-│   │
-│   ├── pages/
-│   │
-│   ├── widgets/
-│   │
-│   ├── services/
-│   │
-│   ├── utils/
-│   │
-│   └── theme.css
+├── core/
+│   ├── application.py
+│   ├── window.py
+│   ├── navigation.py
+│   └── config.py
 │
-├── assets/
+├── models/
 │
-├── pyproject.toml
+├── pages/
 │
-└── README.md
+├── widgets/
+│
+├── services/
+│
+├── utils/
+│
+└── theme.css
 ```
 
 ---
 
-# Design Principles
+# Development Principles
+
+TouchDeck is built around a few simple principles.
 
 ## Touch First
 
-Every interface element should be designed for touch interaction.
+Everything should be designed for touch interaction.
 
-Large buttons, generous spacing and simple navigation are preferred over traditional desktop layouts.
+Large buttons.
+
+Comfortable spacing.
+
+Minimal navigation.
 
 ---
 
-## Modularity
+## Single Responsibility
 
-Every feature should be implemented as an independent component.
+Every class should have one responsibility.
 
-Future modules should be added without modifying the application's core.
+Examples:
 
-Examples include:
+* MainWindow
+* HomePage
+* AppTile
+* LauncherService
+* PowerService
 
-* Home Assistant
-* Jellyfin
-* Spotify
-* Frigate
-* MQTT
-* Camera dashboards
-* Custom plugins
+Avoid classes that do multiple unrelated things.
 
 ---
 
 ## Separation of Concerns
 
-Each class should have a single responsibility.
+The UI should never know how the operating system works.
 
-For example:
-
-* `MainWindow` hosts pages.
-* `HomePage` displays applications.
-* `AppTile` renders a single application.
-* `LauncherService` launches applications.
-* `PowerService` handles shutdown and reboot.
-
-Widgets never execute system commands directly.
-
----
-
-## Layered Architecture
+Example:
 
 ```text
-UI
- │
- ▼
-Pages
- │
- ▼
-Widgets
- │
- ▼
-Services
- │
- ▼
-Models
+AppTile
+
+↓
+
+activated signal
+
+↓
+
+HomePage
+
+↓
+
+LauncherService
+
+↓
+
+subprocess.Popen(...)
 ```
 
-This separation keeps the application maintainable as it grows.
+Widgets emit signals.
+
+Services perform actions.
 
 ---
 
-# Development Guidelines
+## Layered Dependencies
 
-## Modern Python
-
-TouchDeck follows modern Python practices.
-
-Preferred language features include:
-
-* dataclasses
-* slots
-* pathlib
-* enum
-* typing
-* match statements where appropriate
-
----
-
-## Strong Typing
-
-All public code should use type annotations.
-
-Example:
-
-```python
-def launch(app: AppEntry) -> None:
-    ...
-```
-
-Untyped functions should be avoided.
-
----
-
-## Data Models
-
-Application data is represented using dataclasses.
-
-Example:
-
-```python
-@dataclass(slots=True)
-class AppEntry:
-    title: str
-    icon: str
-    command: str
-```
-
-Using `slots=True` improves memory efficiency and prevents accidental attribute creation.
-
----
-
-## Dependency Direction
-
-Dependencies should always point downward.
+Dependencies always point downward.
 
 ```text
 Application
@@ -267,27 +202,143 @@ Pages
 Widgets
     ↓
 Services
+    ↓
+Models
 ```
 
-Widgets should never instantiate services internally.
+Services never depend on widgets.
 
-Dependencies should be injected whenever possible.
+Models never depend on GTK.
+
+---
+
+# Coding Standards
+
+## Modern Python
+
+TouchDeck embraces modern Python.
+
+Preferred features include:
+
+* dataclasses
+* slots=True
+* pathlib
+* enum
+* typing
+* match statements where appropriate
+
+---
+
+## Type Hints
+
+Every public function should be typed.
+
+Good:
+
+```python
+def launch(app: AppEntry) -> None:
+    ...
+```
+
+Avoid:
+
+```python
+def launch(app):
+    ...
+```
+
+---
+
+## Data Models
+
+Models should use dataclasses.
+
+```python
+@dataclass(slots=True)
+class AppEntry:
+    title: str
+    icon: str
+    command: str
+```
+
+Using `slots=True` improves memory usage and prevents accidental attribute creation.
+
+---
+
+## Private Members
+
+Internal attributes should always use a leading underscore.
+
+```python
+self._window
+self._launcher
+self._apps
+self._image
+self._label
+```
+
+Avoid public attributes unless they are intentionally part of the class API.
+
+---
+
+## Methods
+
+Private helper methods use a leading underscore.
+
+```python
+_build_ui()
+_connect_signals()
+_load_apps()
+_update_clock()
+_on_clicked()
+```
+
+Public methods expose the behavior of a component.
+
+```python
+launch()
+navigate()
+reload()
+show_page()
+```
+
+---
+
+## Constructors
+
+Constructors should stay small.
+
+Prefer this pattern:
+
+```python
+class AppTile(Gtk.Button):
+
+    def __init__(self, app: AppEntry) -> None:
+        super().__init__()
+
+        self._app = app
+
+        self._build_ui()
+        self._connect_signals()
+```
+
+instead of placing all initialization logic directly inside `__init__()`.
 
 ---
 
 ## Styling
 
-Visual appearance belongs in CSS.
-
 Business logic belongs in Python.
 
-Avoid embedding styling directly inside widgets.
+Visual appearance belongs in CSS.
+
+Avoid embedding styling logic inside widgets.
 
 ---
 
 ## Imports
 
-Use absolute imports throughout the project.
+Use absolute imports.
 
 Example:
 
@@ -295,43 +346,45 @@ Example:
 from touchdeck.models.app_entry import AppEntry
 ```
 
-Avoid relative imports unless there is a compelling reason.
+Avoid relative imports whenever possible.
 
 ---
 
-# Scalability
+## Documentation
 
-TouchDeck is designed to evolve into a complete touch-first shell.
+Public classes should include concise docstrings.
 
-The architecture should support future features such as:
-
-* Multiple pages
-* Plugin system
-* Dynamic widgets
-* Dashboard layouts
-* Application categories
-* Favorites
-* User profiles
-* Remote configuration
-* Package management
-* Smart home integrations
-
-without requiring changes to the application's core.
+Complex public methods should also be documented.
 
 ---
 
 # Code Quality
 
-The project aims to maintain high code quality from the beginning.
+The project uses modern tooling.
 
-Planned tooling includes:
+Planned tools include:
 
 * Ruff
 * MyPy
 * Pytest
-* Pre-commit hooks
+* pre-commit
 
-Quality and maintainability are considered first-class features.
+---
+
+# Scalability
+
+TouchDeck is designed to evolve without major architectural changes.
+
+Future features include:
+
+* Plugin system
+* Dynamic widgets
+* Dashboard layouts
+* User profiles
+* Multiple pages
+* Remote configuration
+* Smart home integrations
+* Package management
 
 ---
 
@@ -339,20 +392,23 @@ Quality and maintainability are considered first-class features.
 
 🚧 Early development
 
-Current milestone:
+Current progress:
 
-* Basic GTK4 application
-* Fullscreen window
-* Initial architecture
-* Page system
-* Data model
-
-Next milestone:
-
-* Material-style application tiles
+* GTK4 application
+* Wayland support
+* Main window
+* Initial page system
+* AppTile widget
 * Launcher service
-* Navigation system
-* Theme engine
+* Modular architecture
+
+Next milestones:
+
+* JSON application loader
+* Home page grid
+* CSS theme
+* Icon support
+* Settings page
 
 ---
 

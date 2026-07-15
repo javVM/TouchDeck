@@ -1,0 +1,22 @@
+[
+    {
+        "title": "Chromium",
+        "icon": "web-browser",
+        "command": "chromium"
+    },
+    {
+        "title": "Kodi",
+        "icon": "kodi",
+        "command": "kodi"
+    },
+    {
+        "title": "Files",
+        "icon": "system-file-manager",
+        "command": "pcmanfm"
+    },
+    {
+        "title": "Terminal",
+        "icon": "utilities-terminal",
+        "command": "lxterminal"
+    }
+]
