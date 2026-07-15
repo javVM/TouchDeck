@@ -1,4 +1,4 @@
-from .application import TouchDeckApplication
+from touchdeck.core.application import TouchDeckApplication
 
 
 def main():
