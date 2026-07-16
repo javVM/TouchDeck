@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from touchdeck.models.theme import Theme
+from touchdeck.enums.theme import Theme
 
 
 @dataclass(slots=True)

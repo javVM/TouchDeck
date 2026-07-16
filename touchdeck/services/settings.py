@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from touchdeck.models.settings import Settings
-from touchdeck.models.theme import Theme
+from touchdeck.enums.theme import Theme
 
 
 class SettingsService:

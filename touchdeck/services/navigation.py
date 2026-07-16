@@ -6,7 +6,7 @@ gi.require_version("Gtk", "4.0")
 
 from gi.repository import Gtk
 
-from touchdeck.models.page import Page
+from touchdeck.enums.page import Page
 
 
 class NavigationService:

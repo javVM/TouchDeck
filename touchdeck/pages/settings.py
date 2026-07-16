@@ -7,7 +7,7 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, Gtk
 
 from touchdeck.services.settings import SettingsService
-from touchdeck.models.theme import Theme
+from touchdeck.enums.theme import Theme
 
 
 class SettingsPage(Adw.PreferencesPage):
