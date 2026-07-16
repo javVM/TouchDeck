@@ -45,3 +45,34 @@ flowbox {
     font-weight: bold;
     color: white;
 }
+
+/* Header */
+
+.header {
+    background: #1b1b1b;
+    border-bottom: 1px solid #2d2d2d;
+}
+
+.header-title {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.header-clock {
+    color: #bdbdbd;
+    font-size: 18px;
+}
+
+/* Bottom bar */
+
+.bottom-bar {
+    background: #1b1b1b;
+    border-top: 1px solid #2d2d2d;
+    padding: 8px;
+}
+
+.bottom-bar button {
+    min-height: 52px;
+    border-radius: 14px;
+}

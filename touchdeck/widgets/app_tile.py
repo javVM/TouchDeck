@@ -42,6 +42,7 @@ class AppTile(Gtk.Button):
         self._connect_signals()
 
     def _build_ui(self) -> None:
+        """Build widget hierarchy."""
 
         box = Gtk.Box(
             orientation=Gtk.Orientation.VERTICAL,
@@ -73,6 +74,7 @@ class AppTile(Gtk.Button):
         self.set_child(box)
 
     def _connect_signals(self) -> None:
+        """Connect widget signals."""
 
         self.connect(
             "clicked",
@@ -83,6 +85,7 @@ class AppTile(Gtk.Button):
         self,
         _: Gtk.Button,
     ) -> None:
+        """Emit activation signal."""
 
         self.emit(
             "activated",
