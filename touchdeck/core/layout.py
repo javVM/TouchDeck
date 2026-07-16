@@ -10,6 +10,7 @@ from touchdeck.core.navigation import NavigationStack
 from touchdeck.services.config import ConfigService
 from touchdeck.services.launcher import LauncherService
 from touchdeck.services.navigation import NavigationService
+from touchdeck.services.settings import SettingsService
 from touchdeck.widgets.bottom_bar import BottomBar
 from touchdeck.widgets.header import Header
 
@@ -25,6 +26,7 @@ class MainLayout(Gtk.Box):
         self._config_service = ConfigService()
         self._launcher_service = LauncherService()
         self._navigation_service = NavigationService()
+        self._settings_service = SettingsService()
 
         self._header = Header()
 
@@ -32,6 +34,7 @@ class MainLayout(Gtk.Box):
             config_service=self._config_service,
             launcher_service=self._launcher_service,
             navigation_service=self._navigation_service,
+            settings_service=self._settings_service,
         )
 
         self._navigation.set_vexpand(

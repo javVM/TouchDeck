@@ -13,6 +13,7 @@ from touchdeck.pages.settings import SettingsPage
 from touchdeck.services.config import ConfigService
 from touchdeck.services.launcher import LauncherService
 from touchdeck.services.navigation import NavigationService
+from touchdeck.services.settings import SettingsService
 
 
 class NavigationStack(Gtk.Stack):
@@ -23,6 +24,7 @@ class NavigationStack(Gtk.Stack):
         config_service: ConfigService,
         launcher_service: LauncherService,
         navigation_service: NavigationService,
+        settings_service: SettingsService,
     ) -> None:
         super().__init__()
 
@@ -46,7 +48,9 @@ class NavigationStack(Gtk.Stack):
         )
 
         self.add_named(
-            SettingsPage(),
+            SettingsPage(
+                settings_service=settings_service,
+            ),
             Page.SETTINGS.value,
         )
 
