@@ -8,6 +8,7 @@ gi.require_version("Gtk", "4.0")
 
 from gi.repository import Gtk, Gdk
 
+from touchdeck.models.theme import Theme
 
 class ThemeService:
     """Manages application themes."""
@@ -22,7 +23,7 @@ class ThemeService:
 
     def load(
         self,
-        theme: str = "dark",
+        theme: str = Theme.DARK,
     ) -> None:
         """Load and apply theme."""
 
