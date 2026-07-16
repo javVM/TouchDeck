@@ -6,9 +6,13 @@ gi.require_version("Gtk", "4.0")
 
 from gi.repository import Gtk
 
+from touchdeck.models.page import Page
 from touchdeck.pages.home import HomePage
+from touchdeck.pages.power import PowerPage
+from touchdeck.pages.settings import SettingsPage
 from touchdeck.services.config import ConfigService
 from touchdeck.services.launcher import LauncherService
+from touchdeck.services.navigation import NavigationService
 
 
 class NavigationStack(Gtk.Stack):
@@ -18,8 +22,12 @@ class NavigationStack(Gtk.Stack):
         self,
         config_service: ConfigService,
         launcher_service: LauncherService,
+        navigation_service: NavigationService,
     ) -> None:
         super().__init__()
+
+        self.set_hexpand(True)
+        self.set_vexpand(True)
 
         self.set_transition_type(
             Gtk.StackTransitionType.SLIDE_LEFT_RIGHT,
@@ -34,19 +42,23 @@ class NavigationStack(Gtk.Stack):
                 config_service=config_service,
                 launcher_service=launcher_service,
             ),
-            "home",
+            Page.HOME.value,
+        )
+
+        self.add_named(
+            SettingsPage(),
+            Page.SETTINGS.value,
+        )
+
+        self.add_named(
+            PowerPage(),
+            Page.POWER.value,
         )
 
         self.set_visible_child_name(
-            "home",
+            Page.HOME.value,
         )
 
-    def show(
-        self,
-        page: str,
-    ) -> None:
-        """Show a registered page."""
-
-        self.set_visible_child_name(
-            page,
+        navigation_service.attach_stack(
+            self,
         )
