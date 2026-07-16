@@ -36,11 +36,11 @@ class AppGrid(Gtk.ScrolledWindow):
         )
 
         self._flowbox.set_valign(
-            Gtk.Align.START
+            Gtk.Align.START,
         )
 
         self.set_child(
-            self._flowbox
+            self._flowbox,
         )
 
         self._load_apps()
