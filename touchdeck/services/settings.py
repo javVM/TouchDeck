@@ -4,6 +4,7 @@ import json
 
 from pathlib import Path
 
+from touchdeck.enums.theme import Theme
 from touchdeck.models.settings import Settings
 
 
@@ -88,3 +89,33 @@ class SettingsService:
                 file,
                 indent=4,
             )
+
+    def set_theme(
+        self,
+        theme: Theme,
+    ) -> None:
+        """Update application theme."""
+
+        self._settings.theme = theme
+
+        self.save()
+
+    def set_grid_columns(
+        self,
+        columns: int,
+    ) -> None:
+        """Update launcher columns."""
+
+        self._settings.grid_columns = columns
+
+        self.save()
+
+    def set_clock_24h(
+        self,
+        enabled: bool,
+    ) -> None:
+        """Update clock format."""
+
+        self._settings.clock_24h = enabled
+
+        self.save()
