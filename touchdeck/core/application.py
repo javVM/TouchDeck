@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import gi
 
-gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 
-from gi.repository import Adw, Gtk, Gdk
+from gi.repository import Adw
 
 from touchdeck.core.window import MainWindow
+from touchdeck.services.theme import ThemeService
 
 
 class TouchDeckApplication(Adw.Application):
@@ -18,12 +18,16 @@ class TouchDeckApplication(Adw.Application):
             application_id="io.touchdeck.TouchDeck"
         )
 
+        self._theme = ThemeService()
+
     def do_startup(self) -> None:
         """Application startup."""
 
         Adw.Application.do_startup(self)
 
-        self._load_css()
+        self._theme.load(
+            "dark"
+        )
 
     def do_activate(self) -> None:
         """Activate application."""
@@ -36,21 +40,3 @@ class TouchDeckApplication(Adw.Application):
             )
 
         window.present()
-
-    def _load_css(self) -> None:
-        """Load application CSS."""
-
-        provider = Gtk.CssProvider()
-
-        provider.load_from_path(
-            "styles/base.css"
-        )
-
-        display = Gdk.Display.get_default()
-
-        if display:
-            Gtk.StyleContext.add_provider_for_display(
-                display,
-                provider,
-                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
-            )
