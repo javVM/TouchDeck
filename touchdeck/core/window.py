@@ -7,6 +7,7 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw
 
 from touchdeck.core.layout import MainLayout
+from touchdeck.core.services import Services
 
 
 class MainWindow(Adw.ApplicationWindow):
@@ -15,8 +16,8 @@ class MainWindow(Adw.ApplicationWindow):
     def __init__(
         self,
         application: Adw.Application,
+        services: Services,
     ) -> None:
-
         super().__init__(
             application=application,
         )
@@ -26,5 +27,5 @@ class MainWindow(Adw.ApplicationWindow):
         self.fullscreen()
 
         self.set_content(
-            MainLayout()
+            MainLayout(services)
         )

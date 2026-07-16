@@ -6,8 +6,8 @@ gi.require_version("Adw", "1")
 
 from gi.repository import Adw
 
+from touchdeck.core.services import Services
 from touchdeck.core.window import MainWindow
-from touchdeck.services.theme import ThemeService
 
 
 class TouchDeckApplication(Adw.Application):
@@ -15,19 +15,17 @@ class TouchDeckApplication(Adw.Application):
 
     def __init__(self) -> None:
         super().__init__(
-            application_id="io.touchdeck.TouchDeck"
+            application_id="io.touchdeck.TouchDeck",
         )
 
-        self._theme = ThemeService()
+        self._services = Services()
 
     def do_startup(self) -> None:
         """Application startup."""
 
         Adw.Application.do_startup(self)
 
-        self._theme.load(
-            "dark"
-        )
+        self._services.theme.apply()
 
     def do_activate(self) -> None:
         """Activate application."""
@@ -36,7 +34,8 @@ class TouchDeckApplication(Adw.Application):
 
         if not window:
             window = MainWindow(
-                application=self
+                application=self,
+                services=self._services,
             )
 
         window.present()

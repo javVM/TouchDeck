@@ -6,14 +6,11 @@ gi.require_version("Gtk", "4.0")
 
 from gi.repository import Gtk
 
+from touchdeck.core.services import Services
 from touchdeck.enums.page import Page
 from touchdeck.pages.home import HomePage
 from touchdeck.pages.power import PowerPage
 from touchdeck.pages.settings import SettingsPage
-from touchdeck.services.config import ConfigService
-from touchdeck.services.launcher import LauncherService
-from touchdeck.services.navigation import NavigationService
-from touchdeck.services.settings import SettingsService
 
 
 class NavigationStack(Gtk.Stack):
@@ -21,15 +18,19 @@ class NavigationStack(Gtk.Stack):
 
     def __init__(
         self,
-        config_service: ConfigService,
-        launcher_service: LauncherService,
-        navigation_service: NavigationService,
-        settings_service: SettingsService,
+        services: Services,
     ) -> None:
         super().__init__()
 
-        self.set_hexpand(True)
-        self.set_vexpand(True)
+        self._services = services
+
+        self.set_hexpand(
+            True,
+        )
+
+        self.set_vexpand(
+            True,
+        )
 
         self.set_transition_type(
             Gtk.StackTransitionType.SLIDE_LEFT_RIGHT,
@@ -41,15 +42,15 @@ class NavigationStack(Gtk.Stack):
 
         self.add_named(
             HomePage(
-                config_service=config_service,
-                launcher_service=launcher_service,
+                config_service=self._services.config,
+                launcher_service=self._services.launcher,
             ),
             Page.HOME.value,
         )
 
         self.add_named(
             SettingsPage(
-                settings_service=settings_service,
+                settings_service=self._services.settings,
             ),
             Page.SETTINGS.value,
         )
@@ -63,6 +64,6 @@ class NavigationStack(Gtk.Stack):
             Page.HOME.value,
         )
 
-        navigation_service.attach_stack(
+        self._services.navigation.attach_stack(
             self,
         )

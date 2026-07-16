@@ -7,10 +7,7 @@ gi.require_version("Gtk", "4.0")
 from gi.repository import Gtk
 
 from touchdeck.core.navigation import NavigationStack
-from touchdeck.services.config import ConfigService
-from touchdeck.services.launcher import LauncherService
-from touchdeck.services.navigation import NavigationService
-from touchdeck.services.settings import SettingsService
+from touchdeck.core.services import Services
 from touchdeck.widgets.bottom_bar import BottomBar
 from touchdeck.widgets.header import Header
 
@@ -18,23 +15,20 @@ from touchdeck.widgets.header import Header
 class MainLayout(Gtk.Box):
     """Main application layout."""
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        services: Services,
+    ) -> None:
         super().__init__(
             orientation=Gtk.Orientation.VERTICAL,
         )
 
-        self._config_service = ConfigService()
-        self._launcher_service = LauncherService()
-        self._navigation_service = NavigationService()
-        self._settings_service = SettingsService()
+        self._services = services
 
         self._header = Header()
 
         self._navigation = NavigationStack(
-            config_service=self._config_service,
-            launcher_service=self._launcher_service,
-            navigation_service=self._navigation_service,
-            settings_service=self._settings_service,
+            services,
         )
 
         self._navigation.set_vexpand(
@@ -42,7 +36,7 @@ class MainLayout(Gtk.Box):
         )
 
         self._bottom_bar = BottomBar(
-            navigation_service=self._navigation_service,
+            navigation_service=self._services.navigation,
         )
 
         self.append(

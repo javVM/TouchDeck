@@ -1,48 +1,48 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import gi
 
 gi.require_version("Gtk", "4.0")
 
-from gi.repository import Gtk, Gdk
+from pathlib import Path
+
+from gi.repository import Gdk, Gtk
 
 from touchdeck.enums.theme import Theme
+from touchdeck.services.settings import SettingsService
+
 
 class ThemeService:
-    """Manages application themes."""
+    """Manage application themes."""
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        settings_service: SettingsService,
+    ) -> None:
+
+        self._settings_service = settings_service
+
+        self._provider = Gtk.CssProvider()
+
         self._styles_path = (
-            Path(__file__)
-            .resolve()
+            Path(__file__).resolve()
             .parent.parent
             / "styles"
         )
 
-    def load(
-        self,
-        theme: str = Theme.DARK,
-    ) -> None:
-        """Load and apply theme."""
+    def apply(self) -> None:
+        """Apply the current application theme."""
 
-        css_file = (
-            self._styles_path
-            / f"{theme}.css"
+        theme = self._settings_service.settings.theme
+
+        css_file = self._styles_path / f"{theme.value}.css"
+
+        self._provider.load_from_path(
+            str(css_file),
         )
 
-        provider = Gtk.CssProvider()
-
-        provider.load_from_path(
-            str(css_file)
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(),
+            self._provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
         )
-
-        display = Gdk.Display.get_default()
-
-        if display:
-            Gtk.StyleContext.add_provider_for_display(
-                display,
-                provider,
-                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
-            )
