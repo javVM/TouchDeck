@@ -14,7 +14,11 @@ from touchdeck.widgets.app_grid import AppGrid
 class HomePage(Gtk.Box):
     """Main launcher page."""
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        config_service: ConfigService,
+        launcher_service: LauncherService,
+    ) -> None:
         super().__init__(
             orientation=Gtk.Orientation.VERTICAL,
         )
@@ -27,12 +31,9 @@ class HomePage(Gtk.Box):
         self.set_margin_start(20)
         self.set_margin_end(20)
 
-        self._config = ConfigService()
-        self._launcher = LauncherService()
-
         self.append(
             AppGrid(
-                config_service=self._config,
-                launcher_service=self._launcher,
+                config_service=config_service,
+                launcher_service=launcher_service,
             )
         )
