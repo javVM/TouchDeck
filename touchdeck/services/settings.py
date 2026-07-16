@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from touchdeck.models.settings import Settings
+from touchdeck.models.theme import Theme
 
 
 class SettingsService:
@@ -24,3 +25,21 @@ class SettingsService:
         """Persist settings."""
 
         raise NotImplementedError
+
+    def set_theme(
+        self,
+        theme: Theme,
+    ) -> None:
+        self._settings.theme = theme
+
+    def set_grid_columns(
+        self,
+        columns: int,
+    ) -> None:
+        self._settings.grid_columns = columns
+
+    def set_clock_24h(
+        self,
+        enabled: bool,
+    ) -> None:
+        self._settings.clock_24h = enabled
