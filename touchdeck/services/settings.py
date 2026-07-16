@@ -1,45 +1,90 @@
 from __future__ import annotations
 
+import json
+
+from pathlib import Path
+
 from touchdeck.models.settings import Settings
-from touchdeck.enums.theme import Theme
 
 
 class SettingsService:
     """Manage application settings."""
 
     def __init__(self) -> None:
+
+        self._config_path = (
+            Path(__file__).resolve()
+            .parent.parent.parent
+            / "config"
+            / "settings.json"
+        )
+
         self._settings = self.load()
 
     @property
     def settings(self) -> Settings:
-        """Return current settings."""
+        """Current application settings."""
 
         return self._settings
 
     def load(self) -> Settings:
-        """Load settings."""
+        """Load settings from disk."""
 
-        return Settings()
+        if not self._config_path.exists():
+
+            settings = Settings()
+
+            self._settings = settings
+
+            self.save()
+
+            return settings
+
+        try:
+
+            with self._config_path.open(
+                "r",
+                encoding="utf-8",
+            ) as file:
+
+                data = json.load(file)
+
+        except (
+            json.JSONDecodeError,
+            OSError,
+        ):
+
+            settings = Settings()
+
+            self._settings = settings
+
+            self.save()
+
+            return settings
+
+        settings = Settings.from_dict(
+            data,
+        )
+
+        self._settings = settings
+
+        return settings
 
     def save(self) -> None:
-        """Persist settings."""
+        """Save settings to disk."""
 
-        raise NotImplementedError
+        self._config_path.parent.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
 
-    def set_theme(
-        self,
-        theme: Theme,
-    ) -> None:
-        self._settings.theme = theme
+        with self._config_path.open(
+            "w",
+            encoding="utf-8",
+        ) as file:
 
-    def set_grid_columns(
-        self,
-        columns: int,
-    ) -> None:
-        self._settings.grid_columns = columns
-
-    def set_clock_24h(
-        self,
-        enabled: bool,
-    ) -> None:
-        self._settings.clock_24h = enabled
+            json.dump(
+                self._settings.to_dict(),
+                file,
+                indent=4,
+            )
